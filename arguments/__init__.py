@@ -12,6 +12,8 @@
 from argparse import ArgumentParser, Namespace
 import sys
 import os
+from pathlib import Path
+from config import datasets_path
 
 
 class GroupParams:
@@ -51,7 +53,7 @@ class ModelParams(ParamGroup):
     def __init__(self, parser, sentinel=False):
         self.sh_degree = 3
         self.K = 3
-        self._source_path = ""
+        self._dataset_path = ""
         self._model_path = ""
         self._images = "images"
         self._resolution = -1
@@ -81,9 +83,11 @@ class ModelParams(ParamGroup):
 
     def extract(self, args):
         g = super().extract(args)
-        g.source_path = os.path.abspath(g.source_path)
-        if not g.model_path.endswith(g.deform_type):
-            g.model_path = os.path.join(os.path.dirname(os.path.normpath(g.model_path)), os.path.basename(os.path.normpath(g.model_path)) + f'_{g.deform_type}')
+        dataset_path = datasets_path / Path(g.dataset_path)
+        g.dataset_path = os.path.abspath(dataset_path)
+        print("dataset_path:", g.dataset_path)
+        # if not g.model_path.endswith(g.deform_type):
+        #     g.model_path = os.path.join(os.path.dirname(os.path.normpath(g.model_path)), os.path.basename(os.path.normpath(g.model_path)) + f'_{g.deform_type}')
         return g
 
 
@@ -159,8 +163,8 @@ def get_combined_args(parser: ArgumentParser):
     cfgfile_string = "Namespace()"
     args_cmdline = parser.parse_args(cmdlne_string)
 
-    if not args_cmdline.model_path.endswith(args_cmdline.deform_type):
-        args_cmdline.model_path = os.path.join(os.path.dirname(os.path.normpath(args_cmdline.model_path)), os.path.basename(os.path.normpath(args_cmdline.model_path)) + f'_{args_cmdline.deform_type}')
+    # if not args_cmdline.model_path.endswith(args_cmdline.deform_type):
+    #     args_cmdline.model_path = os.path.join(os.path.dirname(os.path.normpath(args_cmdline.model_path)), os.path.basename(os.path.normpath(args_cmdline.model_path)) + f'_{args_cmdline.deform_type}')
 
     try:
         cfgfilepath = os.path.join(args_cmdline.model_path, "cfg_args")

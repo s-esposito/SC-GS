@@ -1011,7 +1011,7 @@ class GUI:
                 if custom_cam != None:
                     net_image = render(custom_cam, self.gaussians, self.pipe, self.background, scaling_modifer)["render"]
                     net_image_bytes = memoryview((torch.clamp(net_image, min=0, max=1.0) * 255).byte().permute(1, 2, 0).contiguous().cpu().numpy())
-                network_gui.send(net_image_bytes, self.dataset.source_path)
+                network_gui.send(net_image_bytes, self.dataset.dataset_path)
                 if do_training and ((self.iteration < int(self.opt.iterations)) or not keep_alive):
                     break
             except Exception as e:
@@ -1871,8 +1871,8 @@ if __name__ == "__main__":
     args = parser.parse_args(sys.argv[1:])
     args.save_iterations.append(args.iterations)
 
-    if not args.model_path.endswith(args.deform_type):
-        args.model_path = os.path.join(os.path.dirname(os.path.normpath(args.model_path)), os.path.basename(os.path.normpath(args.model_path)) + f'_{args.deform_type}')
+    # if not args.model_path.endswith(args.deform_type):
+    #     args.model_path = os.path.join(os.path.dirname(os.path.normpath(args.model_path)), os.path.basename(os.path.normpath(args.model_path)) + f'_{args.deform_type}')
     
     print("Optimizing " + args.model_path)
     safe_state(args.quiet)

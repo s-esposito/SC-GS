@@ -41,26 +41,26 @@ class Scene:
         self.train_cameras = {}
         self.test_cameras = {}
 
-        if os.path.exists(os.path.join(args.source_path, "sparse")) or os.path.exists(os.path.join(args.source_path, "colmap_sparse")):
-            scene_info = sceneLoadTypeCallbacks["Colmap"](args.source_path, args.images, args.eval)
-        elif os.path.exists(os.path.join(args.source_path, "transforms_train.json")):
+        if os.path.exists(os.path.join(args.dataset_path, "sparse")) or os.path.exists(os.path.join(args.dataset_path, "colmap_sparse")):
+            scene_info = sceneLoadTypeCallbacks["Colmap"](args.dataset_path, args.images, args.eval)
+        elif os.path.exists(os.path.join(args.dataset_path, "transforms_train.json")):
             print("Found transforms_train.json file, assuming Blender data set!")
-            scene_info = sceneLoadTypeCallbacks["Blender"](args.source_path, args.white_background, args.eval)
-        elif os.path.exists(os.path.join(args.source_path, "cameras_sphere.npz")):
+            scene_info = sceneLoadTypeCallbacks["Blender"](args.dataset_path, args.white_background, args.eval)
+        elif os.path.exists(os.path.join(args.dataset_path, "cameras_sphere.npz")):
             print("Found cameras_sphere.npz file, assuming DTU data set!")
-            scene_info = sceneLoadTypeCallbacks["DTU"](args.source_path, "cameras_sphere.npz", "cameras_sphere.npz")
-        elif os.path.exists(os.path.join(args.source_path, "dataset.json")):
+            scene_info = sceneLoadTypeCallbacks["DTU"](args.dataset_path, "cameras_sphere.npz", "cameras_sphere.npz")
+        elif os.path.exists(os.path.join(args.dataset_path, "dataset.json")):
             print("Found dataset.json file, assuming Nerfies data set!")
-            scene_info = sceneLoadTypeCallbacks["nerfies"](args.source_path, args.eval)
-        elif os.path.exists(os.path.join(args.source_path, "poses_bounds.npy")):
+            scene_info = sceneLoadTypeCallbacks["nerfies"](args.dataset_path, args.eval)
+        elif os.path.exists(os.path.join(args.dataset_path, "poses_bounds.npy")):
             print("Found calibration_full.json, assuming Neu3D data set!")
-            scene_info = sceneLoadTypeCallbacks["plenopticVideo"](args.source_path, args.eval, 24)
-        elif os.path.exists(os.path.join(args.source_path, "transforms.json")):
+            scene_info = sceneLoadTypeCallbacks["plenopticVideo"](args.dataset_path, args.eval, 24)
+        elif os.path.exists(os.path.join(args.dataset_path, "transforms.json")):
             print("Found calibration_full.json, assuming Dynamic-360 data set!")
-            scene_info = sceneLoadTypeCallbacks["Blender"](args.source_path)
-        elif os.path.exists(os.path.join(args.source_path, "train_meta.json")):
+            scene_info = sceneLoadTypeCallbacks["Blender"](args.dataset_path)
+        elif os.path.exists(os.path.join(args.dataset_path, "train_meta.json")):
             print("Found train_meta.json, assuming CMU data set!")
-            scene_info = sceneLoadTypeCallbacks["CMU"](args.source_path)
+            scene_info = sceneLoadTypeCallbacks["CMU"](args.dataset_path)
         else:
             assert False, "Could not recognize scene type!"
 
@@ -79,7 +79,7 @@ class Scene:
                 json.dump(json_cams, file)
         
         # Read flow data
-        self.flow_dir = os.path.join(args.source_path, "raft_neighbouring")
+        self.flow_dir = os.path.join(args.dataset_path, "raft_neighbouring")
         flow_list = os.listdir(self.flow_dir) if os.path.exists(self.flow_dir) else []
         flow_dirs_list = []
         for cam in scene_info.train_cameras:

@@ -63,6 +63,14 @@ To prevent initialization failure of control points, you use the argument `--ini
 git clone https://github.com/yihua7/SC-GS --recursive
 cd SC-GS
 
+# environment creation
+conda create -n SC-GS python=3.10
+conda activate SC-GS
+## cuda toolkit
+conda install -c nvidia/label/cuda-12.1.1 cuda-toolkit
+# torch
+pip install torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0 --index-url https://download.pytorch.org/whl/cu121
+# requirements
 pip install -r requirements.txt
 
 # a modified gaussian splatting (+ depth, alpha rendering)
@@ -70,6 +78,13 @@ pip install ./submodules/diff-gaussian-rasterization
 
 # simple-knn
 pip install ./submodules/simple-knn
+```
+
+### Setup datasets path 
+In `config.py`, e.g.:
+
+```python
+datasets_path = Path("/home/stefano/Data")
 ```
 
 ## Run
@@ -82,10 +97,10 @@ pip install ./submodules/simple-knn
 
 ```bash
 # Train with GUI (for the resolution of 400*400 with best PSNR)
-CUDA_VISIBLE_DEVICES=0 python train_gui.py --source_path YOUR/PATH/TO/DATASET/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800 --gui
+CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800 --gui
 
 # Train with GUI (for the resolution of 800*800)
-CUDA_VISIBLE_DEVICES=0 python train_gui.py --source_path YOUR/PATH/TO/DATASET/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --W 800 --H 800 --random_bg_color --white_background --gui
+CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --W 800 --H 800 --random_bg_color --white_background --gui
 ```
 
 ### Train with terminal
@@ -94,7 +109,7 @@ CUDA_VISIBLE_DEVICES=0 python train_gui.py --source_path YOUR/PATH/TO/DATASET/ju
 
 ```bash
 # Train with terminal only (for the resolution of 400*400 with best PSNR)
-CUDA_VISIBLE_DEVICES=0 python train_gui.py --source_path YOUR/PATH/TO/DATASET/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
+CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
 ```
 
 ### Evalualuate
@@ -105,7 +120,7 @@ CUDA_VISIBLE_DEVICES=0 python train_gui.py --source_path YOUR/PATH/TO/DATASET/ju
 
 ```bash
 # Evaluate with GUI (for the resolution of 400*400 with best PSNR)
-CUDA_VISIBLE_DEVICES=0 python render.py --source_path YOUR/PATH/TO/DATASET/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
+CUDA_VISIBLE_DEVICES=0 python render.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
 ```
 
 ## Editing

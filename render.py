@@ -226,8 +226,8 @@ if __name__ == "__main__":
     parser.add_argument("--deform-type", type=str, default='mlp')
 
     args = get_combined_args(parser)
-    if not args.model_path.endswith(args.deform_type):
-        args.model_path = os.path.join(os.path.dirname(os.path.normpath(args.model_path)), os.path.basename(os.path.normpath(args.model_path)) + f'_{args.deform_type}')
+    # if not args.model_path.endswith(args.deform_type):
+    #     args.model_path = os.path.join(os.path.dirname(os.path.normpath(args.model_path)), os.path.basename(os.path.normpath(args.model_path)) + f'_{args.deform_type}')
     print("Rendering " + args.model_path)
 
     # Initialize system state (RNG)
