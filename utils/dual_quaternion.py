@@ -128,7 +128,7 @@ def conjugation(q):
     elif q.shape[-1] == 8:
         q = torch.cat([q[..., :1], -q[..., 1:4], q[..., 4:5], -q[..., 5:]], dim=-1)
     else:
-        raise TypeError(f'q should be of [..., 4] or [..., 8] but got {q.shape}!')
+        raise TypeError(f"q should be of [..., 4] or [..., 8] but got {q.shape}!")
     return q
 
 
@@ -152,26 +152,42 @@ def DQ2QT(dq, rot_as_q=False):
     w0, x0, y0, z0 = torch.unbind(real, -1)
     w1, x1, y1, z1 = torch.unbind(imag, -1)
 
-    t = 2* torch.stack([- w1*x0 + x1*w0 - y1*z0 + z1*y0,
-                        - w1*y0 + x1*z0 + y1*w0 - z1*x0,
-                        - w1*z0 - x1*y0 + y1*x0 + z1*w0], dim=-1)
-    R = torch.stack([1-2*y0**2-2*z0**2, 2*x0*y0-2*w0*z0, 2*x0*z0+2*w0*y0,
-                     2*x0*y0+2*w0*z0, 1-2*x0**2-2*z0**2, 2*y0*z0-2*w0*x0,
-                     2*x0*z0-2*w0*y0, 2*y0*z0+2*w0*x0, 1-2*x0**2-2*y0**2], dim=-1).reshape([*w0.shape, 3, 3])
+    t = 2 * torch.stack(
+        [
+            -w1 * x0 + x1 * w0 - y1 * z0 + z1 * y0,
+            -w1 * y0 + x1 * z0 + y1 * w0 - z1 * x0,
+            -w1 * z0 - x1 * y0 + y1 * x0 + z1 * w0,
+        ],
+        dim=-1,
+    )
+    R = torch.stack(
+        [
+            1 - 2 * y0**2 - 2 * z0**2,
+            2 * x0 * y0 - 2 * w0 * z0,
+            2 * x0 * z0 + 2 * w0 * y0,
+            2 * x0 * y0 + 2 * w0 * z0,
+            1 - 2 * x0**2 - 2 * z0**2,
+            2 * y0 * z0 - 2 * w0 * x0,
+            2 * x0 * z0 - 2 * w0 * y0,
+            2 * y0 * z0 + 2 * w0 * x0,
+            1 - 2 * x0**2 - 2 * y0**2,
+        ],
+        dim=-1,
+    ).reshape([*w0.shape, 3, 3])
     if rot_as_q:
         q = matrix_to_quaternion(R)
         return q, t
     else:
         return R, t
-    
+
 
 def DQBlending(q, t, weights, rot_as_q=True):
-    '''
+    """
     Input:
         q: [..., k, 4]; t: [..., k, 3]; weights: [..., k]
     Output:
         q_: [..., 4]; t_: [..., 3]
-    '''
+    """
     dq = QT2DQ(q=q, t=t)
     dq_avg = (dq * weights[..., None]).sum(dim=-2)
     q_, t_ = DQ2QT(dq_avg, rot_as_q=rot_as_q)
@@ -191,7 +207,12 @@ def transformation_blending(transformations, weights):
     qs = matrix_to_quaternion(Rs)
     q, T = DQBlending(qs[None], Ts[None], weights)
     R = quaternion_to_matrix(q)
-    transformation = torch.eye(4).to(transformations.device)[None].expand(weights.shape[0], 4, 4).clone()
+    transformation = (
+        torch.eye(4)
+        .to(transformations.device)[None]
+        .expand(weights.shape[0], 4, 4)
+        .clone()
+    )
     transformation[:, :3, :3] = R
     transformation[:, :3, 3] = T
     return transformation

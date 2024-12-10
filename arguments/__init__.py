@@ -3,7 +3,7 @@
 # GRAPHDECO research group, https://team.inria.fr/graphdeco
 # All rights reserved.
 #
-# This software is free for non-commercial, research and evaluation use 
+# This software is free for non-commercial, research and evaluation use
 # under the terms of the LICENSE.md file.
 #
 # For inquiries contact  george.drettakis@inria.fr
@@ -54,7 +54,7 @@ class ModelParams(ParamGroup):
         self.sh_degree = 3
         self.K = 3
         self._dataset_path = ""
-        self._model_path = ""
+        self._run_path = ""
         self._images = "images"
         self._resolution = -1
         self._white_background = False
@@ -62,7 +62,7 @@ class ModelParams(ParamGroup):
         self.eval = False
         self.load2gpu_on_the_fly = False
         self.is_blender = False
-        self.deform_type = 'node'
+        self.deform_type = "node"
         self.skinning = False
         self.hyper_dim = 8
         self.node_num = 1024
@@ -70,14 +70,14 @@ class ModelParams(ParamGroup):
         self.pred_color = False
         self.use_hash = False
         self.hash_time = False
-        self.d_rot_as_rotmat = False # Debug!!!
-        self.d_rot_as_res = True # Debug!!!
+        self.d_rot_as_rotmat = False  # Debug!!!
+        self.d_rot_as_res = True  # Debug!!!
         self.local_frame = False
         self.progressive_brand_time = False
         self.gs_with_motion_mask = False
         self.init_isotropic_gs_with_all_colmap_pcl = False
         self.as_gs_force_with_motion_mask = False  # Only for scenes with both static and dynamic parts and without alpha mask
-        self.max_d_scale = -1.
+        self.max_d_scale = -1.0
         self.is_scene_static = False
         super().__init__(parser, "Loading Parameters", sentinel)
 
@@ -85,9 +85,8 @@ class ModelParams(ParamGroup):
         g = super().extract(args)
         dataset_path = datasets_path / Path(g.dataset_path)
         g.dataset_path = os.path.abspath(dataset_path)
-        print("dataset_path:", g.dataset_path)
-        # if not g.model_path.endswith(g.deform_type):
-        #     g.model_path = os.path.join(os.path.dirname(os.path.normpath(g.model_path)), os.path.basename(os.path.normpath(g.model_path)) + f'_{g.deform_type}')
+        # if not g.run_path.endswith(g.deform_type):
+        #     g.run_path = os.path.join(os.path.dirname(os.path.normpath(g.run_path)), os.path.basename(os.path.normpath(g.run_path)) + f'_{g.deform_type}')
         return g
 
 
@@ -123,8 +122,8 @@ class OptimizationParams(ParamGroup):
         self.oneupSHdegree_step = 1000
         self.random_bg_color = False
 
-        self.deform_lr_scale = 1.
-        self.deform_downsamp_strategy = 'samp_hyper'
+        self.deform_lr_scale = 1.0
+        self.deform_downsamp_strategy = "samp_hyper"
         self.deform_downsamp_with_dynamic_mask = False
         self.node_enable_densify_prune = False
         self.node_densification_interval = 5000
@@ -140,14 +139,16 @@ class OptimizationParams(ParamGroup):
 
         self.progressive_train = False
         self.progressive_train_node = False
-        self.progressive_stage_ratio = .2  # The ratio of the number of images added per stage
+        self.progressive_stage_ratio = (
+            0.2  # The ratio of the number of images added per stage
+        )
         self.progressive_stage_steps = 3000  # The training steps of each stage
 
-        self.lambda_optical_landmarks = [1e-1, 1e-1,   1e-3,        0]
-        self.lambda_optical_steps =     [0,    15_000, 25_000, 25_001]
+        self.lambda_optical_landmarks = [1e-1, 1e-1, 1e-3, 0]
+        self.lambda_optical_steps = [0, 15_000, 25_000, 25_001]
 
-        self.lambda_motion_mask_landmarks = [5e-1,      1e-2,      0]
-        self.lambda_motion_mask_steps =     [0,       10_000, 10_001]
+        self.lambda_motion_mask_landmarks = [5e-1, 1e-2, 0]
+        self.lambda_motion_mask_steps = [0, 10_000, 10_001]
         self.no_motion_mask_loss = False  # Camera pose may be inaccurate and should model the whole scene motion
 
         self.gt_alpha_mask_as_scene_mask = False
@@ -163,11 +164,11 @@ def get_combined_args(parser: ArgumentParser):
     cfgfile_string = "Namespace()"
     args_cmdline = parser.parse_args(cmdlne_string)
 
-    # if not args_cmdline.model_path.endswith(args_cmdline.deform_type):
-    #     args_cmdline.model_path = os.path.join(os.path.dirname(os.path.normpath(args_cmdline.model_path)), os.path.basename(os.path.normpath(args_cmdline.model_path)) + f'_{args_cmdline.deform_type}')
+    # if not args_cmdline.run_path.endswith(args_cmdline.deform_type):
+    #     args_cmdline.run_path = os.path.join(os.path.dirname(os.path.normpath(args_cmdline.run_path)), os.path.basename(os.path.normpath(args_cmdline.run_path)) + f'_{args_cmdline.deform_type}')
 
     try:
-        cfgfilepath = os.path.join(args_cmdline.model_path, "cfg_args")
+        cfgfilepath = os.path.join(args_cmdline.run_path, "cfg_args")
         print("Looking for config file in", cfgfilepath)
         with open(cfgfilepath) as cfg_file:
             print("Config file found: {}".format(cfgfilepath))

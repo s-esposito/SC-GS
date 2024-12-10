@@ -97,10 +97,10 @@ datasets_path = Path("/home/stefano/Data")
 
 ```bash
 # Train with GUI (for the resolution of 400*400 with best PSNR)
-CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800 --gui
+CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --run_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800 --gui
 
 # Train with GUI (for the resolution of 800*800)
-CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --W 800 --H 800 --random_bg_color --white_background --gui
+CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --run_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --W 800 --H 800 --random_bg_color --white_background --gui
 ```
 
 ### Train with terminal
@@ -109,7 +109,7 @@ CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --
 
 ```bash
 # Train with terminal only (for the resolution of 400*400 with best PSNR)
-CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
+CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --run_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
 ```
 
 ### Evalualuate
@@ -120,7 +120,7 @@ CUDA_VISIBLE_DEVICES=0 python train_gui.py --dataset_path d-nerf/jumpingjacks --
 
 ```bash
 # Evaluate with GUI (for the resolution of 400*400 with best PSNR)
-CUDA_VISIBLE_DEVICES=0 python render.py --dataset_path d-nerf/jumpingjacks --model_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
+CUDA_VISIBLE_DEVICES=0 python render.py --dataset_path d-nerf/jumpingjacks --run_path outputs/jumpingjacks --deform_type node --node_num 512 --hyper_dim 8 --is_blender --eval --gt_alpha_mask_as_scene_mask --local_frame --resolution 2 --W 800 --H 800
 ```
 
 ## Editing
